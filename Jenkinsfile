@@ -3,40 +3,36 @@ pipeline {
     stages {
         stage('Test') {
             steps {
-                script {
-                    // Run tests
-                    bat 'gradlew.bat test --tests "acceptation.DeterminantCalculatorFeature"'
-                    bat 'gradlew.bat test'
+               script {
+                    bat './gradlew.bat test --tests "acceptation.DeterminantCalculatorFeature"'
+                    bat './gradlew.bat test'
                 }
             }
             post {
                 always {
-                    // Publish JUnit test results
-                    junit 'build\\test-results\\test\\*.xml'
-
-                    // Publish Cucumber JSON reports
-                    cucumber 'build\\reports\\cucumber\\*.json'
+                    junit 'build/test-results/test/.xml'
+                    cucumber 'build/reports/cucumber/.json'
                 }
             }
         }
         stage('SonarQube') {
             steps {
                 // Use the SonarQube environment wrapper
-                withSonarQubeEnv('sonar') { // Replace 'sonar' with your SonarQube configuration name in Jenkins
-                    bat 'gradlew.bat sonar'
+                withSonarQubeEnv('sonar') { // Replace 'SonarQube' with the name of your configured SonarQube server in Jenkins
+                    sh './gradlew sonar'
                 }
             }
         }
+
         stage('Code Quality') {
-            steps {
-                script {
-                    // Wait for SonarQube Quality Gate result
-                    def qualityGate = waitForQualityGate()
-                    if (qualityGate.status != 'OK') {
-                        error "Pipeline failed due to Quality Gate failure: ${qualityGate.status}"
-                    }
-                }
-            }
-        }
+             steps {
+                 script {
+                     def qualityGate = waitForQualityGate() // Wait for SonarQube's analysis result
+                     if (qualityGate.status != 'OK') {
+                         error "Pipeline failed due to Quality Gate failure: ${qualityGate.status}"
+                     }
+                 }
+             }
+         }
     }
 }
