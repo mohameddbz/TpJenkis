@@ -65,6 +65,7 @@ pipeline {
             )
 
         }
+
         failure {
 
             // Email Notification for Pipeline Failure
