@@ -66,6 +66,7 @@ pipeline {
 
         }
         failure {
+
             // Email Notification for Pipeline Failure
             mail(
                 to: 'lm_dabouz@esi.dz',
