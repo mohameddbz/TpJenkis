@@ -61,14 +61,14 @@ pipeline {
                              currentBuild.result = currentBuild.result ?: 'SUCCESS'
                              if (currentBuild.result == 'SUCCESS') {
                                  echo 'Sending success notifications...'
-                                 mail to: 'lr_gueddouche@esi.dz',
-                                      subject: "Build Success: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                                      body: "The build and deployment for ${env.JOB_NAME} #${env.BUILD_NUMBER} was successful."
+                                 mail to: 'lm_dabouz@esi.dz',
+                                      subject: "Build Success: ",
+                                      body: "The build and deployment for  was successful."
                              } else {
                                  echo 'Sending failure notifications...'
-                                 mail to: 'lr_gueddouche@esi.dz',
-                                      subject: "Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                                      body: "The build for ${env.JOB_NAME} #${env.BUILD_NUMBER} failed. Check the logs for details."
+                                 mail to: 'lm_dabouz@esi.dz',
+                                      subject: "Build Failed: ",
+                                      body: "The build for  failed. Check the logs for details."
                              }
 
                          }
