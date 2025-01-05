@@ -64,12 +64,6 @@ pipeline {
                 body: 'The deployment for the project mohamed was successful.'
             )
 
-            // Slack Notification for Successful Deployment
-            slackSend(
-                channel: '#tp-jinkins',
-                color: 'good',
-                message: 'Deployment succeeded for project mezenner-ci-cd!'
-            )
         }
         failure {
             // Email Notification for Pipeline Failure
@@ -77,13 +71,6 @@ pipeline {
                 to: 'lm_dabouz@esi.dz',
                 subject: 'Pipeline Failed - Project mohamed',
                 body: 'The Jenkins pipeline for project mohamed has failed. Please check the logs for more details.'
-            )
-
-            // Slack Notification for Pipeline Failure
-            slackSend(
-                channel: '#tp-jinkins',
-                color: 'danger',
-                message: 'Pipeline failed for project mohamed. Check Jenkins for details!'
             )
         }
     }
