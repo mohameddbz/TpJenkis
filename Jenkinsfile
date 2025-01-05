@@ -15,7 +15,7 @@ pipeline {
                 }
             }
         }
-        stage('SonarQube') {
+        stage('sonar') {
             steps {
                 // Use the SonarQube environment wrapper
                 withSonarQubeEnv('sonar') { // Replace 'SonarQube' with the name of your configured SonarQube server in Jenkins
