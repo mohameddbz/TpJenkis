@@ -1,77 +1,39 @@
 pipeline {
     agent any
-
     stages {
         stage('Test') {
             steps {
-                echo 'Testing & archiving..'
-                bat "./gradlew test"
-                archiveArtifacts '**/build/libs/*.jar'
-            }
-        }
+                script {
 
-         stage('Code Analysis') {
-            steps {
-                echo 'Starting Code Analysis with SonarQube...'
-                withSonarQubeEnv('Sonar') {
-                    bat './gradlew sonar'
+                    sh './gradlew test --tests "acceptation.DeterminantCalculatorFeature"'
+                    sh './gradlew test'
                 }
             }
-         }
-
-         /*stage('Code Quality') {
-             steps {
-                 echo 'Checking SonarQube Quality Gates...'
-                 waitForQualityGate abortPipeline: true
+            post {
+                always {
+                    junit 'build/test-results/test/*.xml'
+                    cucumber 'build/reports/cucumber/*.json'
+                }
             }
-         }*/
-
-        stage('Build') {
-                 steps {
-                     echo 'Building the Project...'
-                     bat './gradlew build'
-                     echo 'Generating Documentation...'
-                     bat './gradlew javadoc' // Génération de la documentation
-                     archiveArtifacts artifacts: '**/build/libs/*.jar', fingerprint: true
-                     archiveArtifacts artifacts: '**/build/docs/javadoc/**', fingerprint: true
-                 }
+        }
+        stage('SonarQube') {
+            steps {
+                // Use the SonarQube environment wrapper
+                withSonarQubeEnv('sonar') { // Replace 'SonarQube' with the name of your configured SonarQube server in Jenkins
+                    sh './gradlew sonar'
+                }
+            }
         }
 
-         stage('Deploy') {
-            steps {
-                echo 'Deploying with Maven...'
-                bat './gradlew publish'
-            }
-         }
-
-         stage('Email Notification') {
+        stage('Code Quality') {
              steps {
                  script {
-                     currentBuild.result = currentBuild.result ?: 'SUCCESS'
-                     if (currentBuild.result == 'SUCCESS') {
-                         echo 'Sending success notifications...'
-                         mail to: 'lr_gueddouche@esi.dz',
-                              subject: "Build Success: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                              body: "The build and deployment for ${env.JOB_NAME} #${env.BUILD_NUMBER} was successful."
-                     } else {
-                         echo 'Sending failure notifications...'
-                         mail to: 'lr_gueddouche@esi.dz',
-                              subject: "Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                              body: "The build for ${env.JOB_NAME} #${env.BUILD_NUMBER} failed. Check the logs for details."
+                     def qualityGate = waitForQualityGate() // Wait for SonarQube's analysis result
+                     if (qualityGate.status != 'OK') {
+                         error "Pipeline failed due to Quality Gate failure: ${qualityGate.status}"
                      }
-
                  }
              }
          }
-
-         stage('Slack Notification') {
-             steps {
-                 slackSend channel: '#tp7',
-                           color: 'good',
-                           message: "Build ${env.JOB_NAME} #${env.BUILD_NUMBER} completed successfully."
-             }
-         }
-
-
     }
 }
