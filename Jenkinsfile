@@ -54,27 +54,25 @@ pipeline {
                 }
             }
         }
+        stage('Email Notification') {
+                     steps {
+                         script {
+                             currentBuild.result = currentBuild.result ?: 'SUCCESS'
+                             if (currentBuild.result == 'SUCCESS') {
+                                 echo 'Sending success notifications...'
+                                 mail to: 'lr_gueddouche@esi.dz',
+                                      subject: "Build Success: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                                      body: "The build and deployment for ${env.JOB_NAME} #${env.BUILD_NUMBER} was successful."
+                             } else {
+                                 echo 'Sending failure notifications...'
+                                 mail to: 'lr_gueddouche@esi.dz',
+                                      subject: "Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                                      body: "The build for ${env.JOB_NAME} #${env.BUILD_NUMBER} failed. Check the logs for details."
+                             }
+
+                         }
+                     }
+                 }
     }
-    post {
-        success {
-            // Email Notification for Successful Deployment
-            mail(
-                to: 'lm_dabouz@esi.dz',
-                subject: 'Deployment Success - Project mohamed',
-                body: 'The deployment for the project mohamed was successful.'
-            )
 
-
-        }
-
-        failure {
-
-            // Email Notification for Pipeline Failure
-            mail(
-                to: 'lm_dabouz@esi.dz',
-                subject: 'Pipeline Failed - Project mohamed',
-                body: 'The Jenkins pipeline for project mohamed has failed. Please check the logs for more details.'
-            )
-        }
-    }
 }
