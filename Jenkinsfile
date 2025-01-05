@@ -21,6 +21,7 @@ pipeline {
                 withSonarQubeEnv('sonar') { // Replace 'SonarQube' with the name of your configured SonarQube server in Jenkins
                     bat './gradlew.bat sonar'
                 }
+
             }
         }
 
