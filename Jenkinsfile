@@ -3,15 +3,16 @@ pipeline {
     stages {
         stage('Test') {
             steps {
-               script {
-                    bat './gradlew.bat test --tests "acceptation.DeterminantCalculatorFeature"'
-                    bat './gradlew.bat test'
+                script {
+
+                    sh './gradlew test --tests "acceptation.DeterminantCalculatorFeature"'
+                    sh './gradlew test'
                 }
             }
             post {
                 always {
-                    junit 'build/test-results/test/.xml'
-                    cucumber 'build/reports/cucumber/.json'
+                    junit 'build/test-results/test/*.xml'
+                    cucumber 'build/reports/cucumber/*.json'
                 }
             }
         }
