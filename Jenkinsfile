@@ -73,7 +73,15 @@ pipeline {
 
                          }
                      }
-                 }
+        }
+        stage('Slack Notification') {
+                     steps {
+                         slackSend channel: '#TpJankins',
+                                   color: 'good',
+                                   message: "Build  completed successfully."
+                     }
+        }
+
     }
 
 }
