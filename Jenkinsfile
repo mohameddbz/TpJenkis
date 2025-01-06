@@ -76,7 +76,7 @@ pipeline {
         }
         stage('Slack Notification') {
                      steps {
-                         slackSend channel: '#TpJankins',
+                         slackSend channel: '#work',
                                    color: 'good',
                                    message: "Build  completed successfully."
                      }
