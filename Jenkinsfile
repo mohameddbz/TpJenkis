@@ -71,6 +71,7 @@ pipeline {
                                       body: "The build for  failed. Check the logs for details."
                              }
 
+
                          }
                      }
         }
