@@ -45,6 +45,7 @@ pipeline {
         }
         stage('Deploy') {
             steps {
+
                 script {
                     bat 'gradlew.bat publish'
                 }
