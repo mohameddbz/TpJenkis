@@ -38,14 +38,17 @@ pipeline {
                 script {
                     bat './gradlew.bat jar'
                     bat './gradlew.bat javadoc'
-                    archiveArtifacts artifacts: '**/build/libs/*.jar', fingerprint: true
-                    archiveArtifacts artifacts: '**/build/docs/javadoc/**', fingerprint: true
+                }
+            }
+            post {
+                success {
+                    archiveArtifacts artifacts: 'build/libs/*.jar', fingerprint: true
+                    archiveArtifacts artifacts: 'build/docs/javadoc/**/*', fingerprint: true
                 }
             }
         }
         stage('Deploy') {
             steps {
-
                 script {
                     bat 'gradlew.bat publish'
                 }
