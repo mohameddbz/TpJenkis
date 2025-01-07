@@ -55,8 +55,8 @@ publishing {
         maven {
             url = uri('https://mymavenrepo.com/repo/BaqfmbkAZF22kIqFBPqP/')
             credentials {
-                username = 'myMavenRepo'  // Replace with your actual username
-                password = 'dbzmomoh2003' // Replace with your actual password
+                username = 'myMavenRepo'
+                password = 'dbzmomoh2003'
             }
         }
     }
@@ -70,7 +70,7 @@ publishing {
 
 
 test {
-    finalizedBy jacocoTestReport // Ensure test runs before generating the report
+    finalizedBy jacocoTestReport
 
     systemProperty "cucumber.plugin", "json:build/reports/cucumber/cucumber.json"
 }
